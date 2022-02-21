@@ -3,6 +3,7 @@ const logger = require('morgan');
 const helmet = require("helmet");
 const cors = require("cors");
 const session = require('express-session')
+const Store = require('connect-session-knex')(session)
 
 /**
   Do what needs to be done to support sessions with the `express-session` package!
@@ -38,6 +39,13 @@ server.use(session({
   rolling: true, // push back the expiration date of cookie
   resave: false, // ignore for now
   saveUninitialized: false, // if false, sessions are not stored "by default" // important it be GDPR
+  store: new Store({
+    knex: require('../data/db-config'),
+    tablename: 'sessions',
+    sidfieldname: 'sid',
+    createtable: true,
+    clearInterval: 1000 * 60 * 60,
+  })
 }))
 
 server.use('/api/users', usersRouter)
