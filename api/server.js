@@ -2,6 +2,7 @@ const express = require("express");
 const logger = require('morgan');
 const helmet = require("helmet");
 const cors = require("cors");
+const session = require('express-session')
 
 /**
   Do what needs to be done to support sessions with the `express-session` package!
@@ -25,6 +26,19 @@ server.use(logger('dev'));
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+
+server.use(session({
+  name: 'monkey', // the name of the sessionID
+  secret: process.env.SECRET  || 'keep it secret',
+  cookie: {
+    maxAge: 1000 * 60 * 60,
+    secure: false, // in prod it should be true (if true, only over HTTPS)
+    httpOnly: false, // make it true if possible (if true, the javascript cannot read the cookie)
+  },
+  rolling: true, // push back the expiration date of cookie
+  resave: false, // ignore for now
+  saveUninitialized: false, // if false, sessions are not stored "by default" // important it be GDPR
+}))
 
 server.use('/api/users', usersRouter)
 server.use('/api/auth', authRouter)
