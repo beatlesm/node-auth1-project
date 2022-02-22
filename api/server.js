@@ -29,7 +29,7 @@ server.use(express.json());
 server.use(cors());
 
 server.use(session({
-  name: 'monkey', // the name of the sessionID
+  name: 'chocolatechip', // the name of the sessionID
   secret: process.env.SECRET  || 'keep it secret',
   cookie: {
     maxAge: 1000 * 60 * 60,
