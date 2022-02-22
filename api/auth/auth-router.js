@@ -65,6 +65,19 @@ router.post('/login', checkUsernameExists, async (req, res, next) => {
 })
 
 router.get('/logout', (req, res, next) => {
+  if (req.session.user) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.json({ message: `sorry, could you retry` })        
+      } else {
+        // set a new cookie in THE PAST
+        res.set('Set-Cookie', 'monkey=; SameSite=Strict; Path=/; Expires=Thu, 01 Jan 1970 00:00:00')
+        res.json({ message: "logged out" })        
+      }
+    })
+  } else {
+    res.json({ message: "no session" })
+  }
 /**
   3 [GET] /api/auth/logout
 
@@ -80,7 +93,7 @@ router.get('/logout', (req, res, next) => {
     "message": "no session"
   }
  */
-  res.json('logout')
+  
 })
  
 // Don't forget to add the router to the `exports` object so it can be required in other modules
