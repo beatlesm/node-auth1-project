@@ -26,7 +26,12 @@ router.get("/", restricted, (req, res, next) => {
     "message": "You shall not pass!"
   }
  */
-  res.json('get /api/users')
+  Users.find()
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(next)
+
 })  
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
